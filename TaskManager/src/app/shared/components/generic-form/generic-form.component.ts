@@ -1,17 +1,62 @@
-import { Component, EventEmitter, Input, OnInit, output } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  output,
+  OutputEmitterRef,
+  signal,
+} from '@angular/core';
 import { FormFieldConfig } from '../../models/form-field';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
+import { InputNumber } from 'primeng/inputnumber';
+import { Calendar } from 'primeng/calendar';
+import { Button } from 'primeng/button';
 @Component({
   selector: 'app-generic-form',
-  imports: [],
+  imports: [ReactiveFormsModule, InputNumber, Calendar, Button],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.scss',
 })
 export class GenericFormComponent implements OnInit {
   @Input({ required: true }) config: FormFieldConfig[] = [];
-  formSubmit = output<any>;
-  formClosed = output<void>;
+  formSubmit: OutputEmitterRef<any> = output<any>();
+  formClosed: OutputEmitterRef<void> = output<void>();
+
+  form = signal<FormGroup>(new FormGroup({}));
+  isValid = signal(false);
+
   ngOnInit(): void {
-    console.log(this.config);
+    const group: { [key: string]: FormControl } = {};
+
+    this.config.forEach((field) => {
+      const validators = [];
+      if (field.required) validators.push(Validators.required);
+      if (field.type === 'number') {
+        if (field.min !== undefined) validators.push(Validators.min(field.min));
+        if (field.max !== undefined) validators.push(Validators.max(field.max));
+      }
+      group[field.name] = new FormControl('', validators);
+    });
+
+    this.form.set(new FormGroup(group));
+  }
+
+  onSubmit() {
+    if (this.form().valid) {
+      this.formSubmit.emit(this.form().value);
+      this.formClosed.emit();
+    } else {
+      this.form().markAllAsTouched();
+    }
+  }
+
+  getControl(name: string) {
+    return this.form().get(name);
   }
 }

@@ -1,1 +1,38 @@
-<p>generic-form works!</p>
+<form [formGroup]="form()" (ngSubmit)="onSubmit()">
+  @for( field of config; track field.name){
+  <div>
+    <label>{{ field.name }}</label>
+
+    @switch(field.type) { @case('text') {
+    <input
+      pInputText
+      [formControlName]="field.name"
+      [placeholder]="field.placeholder"
+    />
+    } @case('number'){
+    <p-inputNumber
+      [formControlName]="field.name"
+      [min]="field.min"
+      [max]="field.max"
+    ></p-inputNumber>
+    } @case('date'){
+    <p-calendar
+      [formControlName]="field.name"
+      dateFormat="yy-mm-dd"
+    ></p-calendar>
+    } } @if(getControl(field.name)?.touched && getControl(field.name)?.invalid){
+    <div class="error">
+      @if(form().get(field.name)?.errors?.['required']){
+      <small>{{ field.name }} is required</small>
+      } @if(form().get(field.name)?.errors?.['min']){
+      <small>Value is too low</small>
+      } @if(form().get(field.name)?.errors?.['max']){
+      <small>Value is too high</small>
+      }
+    </div>
+    }
+  </div>
+  }
+
+  <p-button type="submit" label="Create" [disabled]="!isValid()" />
+</form>

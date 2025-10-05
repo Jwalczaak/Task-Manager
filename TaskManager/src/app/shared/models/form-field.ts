@@ -35,5 +35,7 @@ export const TASK_ADD_OR_UPDATE_CONFIG: FormFieldConfig[] = [
     type: 'number',
     required: false,
     placeholder: 'Mark progress',
+    min: 0,
+    max: 100,
   },
 ];
