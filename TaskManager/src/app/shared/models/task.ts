@@ -1,9 +1,11 @@
-export interface Task {
+export type Task = {
   id: number;
   title: string;
-  status: any;
+  status: statuses;
   dueDate: Date;
   CreationDate: Date;
   assigned: string;
   progressPercentage: number;
-}
+};
+
+export type statuses = 'to do' | 'in progress' | 'waiting' | 'blocked' | 'done';

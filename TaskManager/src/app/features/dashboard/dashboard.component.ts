@@ -1,4 +1,11 @@
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  Signal,
+  WritableSignal,
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -12,6 +19,11 @@ import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { TaskStoreService } from '../../shared/services/task-store.service';
 import { Task } from '../../shared/models/task';
+import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
+import {
+  FormFieldConfig,
+  TASK_ADD_OR_UPDATE_CONFIG,
+} from '../../shared/models/form-field';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -23,23 +35,30 @@ import { Task } from '../../shared/models/task';
     InputIconModule,
     MultiSelectModule,
     SelectModule,
-
+    ButtonModule,
     CommonModule,
     FormsModule,
+    GenericFormComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private taskStore = inject(TaskStoreService);
+
+  TASK_ADD_OR_UPDATE_CONFIG: FormFieldConfig[] = TASK_ADD_OR_UPDATE_CONFIG;
   loading: Signal<boolean> = computed(() =>
     this.taskStore.tasksResource.isLoading()
   );
   tasks: Signal<Task[] | undefined> = computed(() =>
     this.taskStore.tasksResource.value()
   );
+  showForm: WritableSignal<boolean> = signal(false);
 
-  ngOnInit(): void {}
+  openForm(): void {
+    this.showForm.set(true);
+    console.log('yes');
+  }
 
   clear(table: any) {
     table.clear();

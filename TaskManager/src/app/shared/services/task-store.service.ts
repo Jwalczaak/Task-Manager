@@ -9,7 +9,6 @@ import { of, delay } from 'rxjs';
 export class TaskStoreService {
   constructor(private http: HttpClient) {}
 
-  // Some sample data to pick from
   titles = [
     'Design homepage',
     'Setup database',
@@ -25,7 +24,13 @@ export class TaskStoreService {
 
   assignees = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace'];
 
-  statuses: Task['status'][] = ['Pending', 'In Progress', 'Completed'];
+  statuses: Task['status'][] = [
+    'to do',
+    'in progress',
+    'waiting',
+    'blocked',
+    'done',
+  ];
 
   randomItem<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
