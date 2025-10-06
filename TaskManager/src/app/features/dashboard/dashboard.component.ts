@@ -10,7 +10,6 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
@@ -24,10 +23,10 @@ import {
   FormFieldConfig,
   TASK_ADD_OR_UPDATE_CONFIG,
 } from '../../shared/models/form-field';
+import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 @Component({
   selector: 'app-dashboard',
   imports: [
-    ButtonModule,
     TableModule,
     TagModule,
     IconFieldModule,
@@ -39,6 +38,7 @@ import {
     CommonModule,
     FormsModule,
     GenericFormComponent,
+    GenericModalComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -54,14 +54,11 @@ export class DashboardComponent {
     this.taskStore.tasksResource.value()
   );
   showForm: WritableSignal<boolean> = signal(false);
+  showModal: WritableSignal<boolean> = signal(false);
 
-  openForm(): void {
+  openModal(): void {
     this.showForm.set(true);
     console.log('yes');
-  }
-
-  clear(table: any) {
-    table.clear();
   }
 
   getSeverity(status: string) {
