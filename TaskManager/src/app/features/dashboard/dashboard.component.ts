@@ -56,9 +56,14 @@ export class DashboardComponent {
   showForm: WritableSignal<boolean> = signal(false);
   showModal: WritableSignal<boolean> = signal(false);
 
+  GenericFormComponent = GenericFormComponent;
   openModal(): void {
-    this.showForm.set(true);
-    console.log('yes');
+    this.showModal.set(true);
+  }
+
+  onHandleCloseModal(): void {
+    console.log('is closing');
+    this.showModal.set(false);
   }
 
   getSeverity(status: string) {

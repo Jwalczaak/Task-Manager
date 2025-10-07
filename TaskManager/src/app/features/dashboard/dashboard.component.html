@@ -70,12 +70,15 @@
       </tr>
     </ng-template>
   </p-table>
-  @if(showForm()){
+  @if(showModal()){
   <div class="form-container mt-4">
     <app-generic-modal
       [headerText]="'Create new task'"
       [width]="'900px'"
       [height]="'600px'"
+      [contentComponent]="GenericFormComponent"
+      [contentInputs]="{ config: TASK_ADD_OR_UPDATE_CONFIG }"
+      (closeModal)="onHandleCloseModal()"
     ></app-generic-modal>
   </div>
   }
