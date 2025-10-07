@@ -39,9 +39,6 @@ export class GenericModalComponent implements AfterViewInit {
         this.contentComponent()
       );
       Object.entries(this.contentInputs() ?? {}).forEach(([key, value]) => {
-        console.log(key);
-        console.log(value);
-        console.log(componentRef.instance);
         if (key in componentRef.instance) {
           componentRef.setInput(key, value);
         }

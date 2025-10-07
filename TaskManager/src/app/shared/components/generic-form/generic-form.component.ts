@@ -10,21 +10,34 @@ import { FormFieldConfig } from '../../models/form-field';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
+import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from 'primeng/inputnumber';
 import { Calendar } from 'primeng/calendar';
 import { Button } from 'primeng/button';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-generic-form',
-  imports: [ReactiveFormsModule, InputNumber, Calendar, Button],
+  imports: [
+    ReactiveFormsModule,
+    InputNumber,
+    InputTextModule,
+    MultiSelectModule,
+    Calendar,
+    Button,
+    CommonModule,
+    FormsModule,
+  ],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.scss',
 })
 export class GenericFormComponent implements OnInit {
   @Input({ required: true }) config: FormFieldConfig[] = [];
+
   formSubmit: OutputEmitterRef<any> = output<any>();
   formClosed: OutputEmitterRef<void> = output<void>();
 
@@ -33,7 +46,7 @@ export class GenericFormComponent implements OnInit {
 
   ngOnInit(): void {
     const group: { [key: string]: FormControl } = {};
-
+    console.log(this.config);
     this.config.forEach((field) => {
       const validators = [];
       if (field.required) validators.push(Validators.required);

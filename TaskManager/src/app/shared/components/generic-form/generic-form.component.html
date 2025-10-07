@@ -15,6 +15,14 @@
       [min]="field.min"
       [max]="field.max"
     ></p-inputNumber>
+    } @case('multiselect'){
+    <p-multiselect
+      [options]="field.options"
+      optionLabel="value"
+      placeholder="Select Cities"
+      [maxSelectedLabels]="3"
+      styleClass="w-full md:w-80"
+    />
     } @case('date'){
     <p-calendar
       [formControlName]="field.name"
