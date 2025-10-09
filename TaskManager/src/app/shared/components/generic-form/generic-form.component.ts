@@ -7,7 +7,7 @@ import {
   OutputEmitterRef,
   signal,
 } from '@angular/core';
-import { FormFieldConfig, FormSetup } from '../../models/form-field';
+import { FormFieldConfig, FormSetup } from '../../models/form';
 import {
   FormControl,
   FormGroup,

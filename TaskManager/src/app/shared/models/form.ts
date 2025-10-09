@@ -20,6 +20,15 @@ export type DropdownOption = {
 
 export type FieldType = 'number' | 'text' | 'date' | 'multiselect';
 
+export type FormMode = 'create' | 'update';
+
+export type FormState<T> = {
+  mode: 'create' | 'update';
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+};
+
 export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
   fieldsConfig: [
     { name: 'name', type: 'text', required: true, placeholder: 'Provide name' },

@@ -19,10 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { TaskStoreService } from '../../shared/services/task-store.service';
 import { Task } from '../../shared/models/task';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
-import {
-  FormSetup,
-  TASK_ADD_OR_UPDATE_CONFIG,
-} from '../../shared/models/form-field';
+import { FormSetup, TASK_ADD_OR_UPDATE_CONFIG } from '../../shared/models/form';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 @Component({
   selector: 'app-dashboard',
