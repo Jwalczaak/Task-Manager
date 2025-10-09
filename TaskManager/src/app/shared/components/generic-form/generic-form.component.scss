@@ -1,0 +1,16 @@
+.form-row label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.form-row input,
+.form-row .p-inputnumber,
+.form-row .p-multiselect,
+.form-row .p-calendar {
+  width: 100%;
+}
+
+.error small {
+  color: #d9534f;
+  font-size: 0.8rem;
+}

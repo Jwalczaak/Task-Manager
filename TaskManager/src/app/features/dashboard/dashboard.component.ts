@@ -20,7 +20,7 @@ import { TaskStoreService } from '../../shared/services/task-store.service';
 import { Task } from '../../shared/models/task';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import {
-  FormFieldConfig,
+  FormSetup,
   TASK_ADD_OR_UPDATE_CONFIG,
 } from '../../shared/models/form-field';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
@@ -46,7 +46,7 @@ import { GenericModalComponent } from '../../shared/components/generic-modal/gen
 export class DashboardComponent {
   private taskStore = inject(TaskStoreService);
 
-  TASK_ADD_OR_UPDATE_CONFIG: FormFieldConfig[] = TASK_ADD_OR_UPDATE_CONFIG;
+  TASK_ADD_OR_UPDATE_CONFIG: FormSetup = TASK_ADD_OR_UPDATE_CONFIG;
   loading: Signal<boolean> = computed(() =>
     this.taskStore.tasksResource.isLoading()
   );

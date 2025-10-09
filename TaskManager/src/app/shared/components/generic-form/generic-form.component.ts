@@ -1,12 +1,13 @@
 import {
   Component,
+  input,
   Input,
   OnInit,
   output,
   OutputEmitterRef,
   signal,
 } from '@angular/core';
-import { FormFieldConfig } from '../../models/form-field';
+import { FormFieldConfig, FormSetup } from '../../models/form-field';
 import {
   FormControl,
   FormGroup,
@@ -36,7 +37,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './generic-form.component.scss',
 })
 export class GenericFormComponent implements OnInit {
-  @Input({ required: true }) config: FormFieldConfig[] = [];
+  config = input.required<FormSetup>();
 
   formSubmit: OutputEmitterRef<any> = output<any>();
   formClosed: OutputEmitterRef<void> = output<void>();
@@ -46,8 +47,7 @@ export class GenericFormComponent implements OnInit {
 
   ngOnInit(): void {
     const group: { [key: string]: FormControl } = {};
-    console.log(this.config);
-    this.config.forEach((field) => {
+    this.config().fieldsConfig.forEach((field) => {
       const validators = [];
       if (field.required) validators.push(Validators.required);
       if (field.type === 'number') {
