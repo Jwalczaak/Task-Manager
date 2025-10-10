@@ -1,5 +1,6 @@
 import {
   Component,
+  inject,
   input,
   Input,
   OnInit,
@@ -21,6 +22,7 @@ import { Calendar } from 'primeng/calendar';
 import { Button } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CommonModule } from '@angular/common';
+import { FormStoreService } from '../../services/stores/form-store.service';
 @Component({
   selector: 'app-generic-form',
   imports: [
@@ -37,12 +39,11 @@ import { CommonModule } from '@angular/common';
   styleUrl: './generic-form.component.scss',
 })
 export class GenericFormComponent implements OnInit {
+  formStore = inject(FormStoreService);
   config = input.required<FormSetup>();
 
-  formSubmit: OutputEmitterRef<any> = output<any>();
-  formClosed: OutputEmitterRef<void> = output<void>();
-
   form = signal<FormGroup>(new FormGroup({}));
+
   isValid = signal(false);
 
   ngOnInit(): void {
@@ -61,12 +62,9 @@ export class GenericFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form().valid) {
-      this.formSubmit.emit(this.form().value);
-      this.formClosed.emit();
-    } else {
-      this.form().markAllAsTouched();
-    }
+    const formValues = this.form().value;
+    this.formStore.setLoading(false);
+    this.formStore.setData(formValues);
   }
 
   getControl(name: string) {

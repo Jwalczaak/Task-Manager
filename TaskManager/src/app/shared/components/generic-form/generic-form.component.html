@@ -23,6 +23,7 @@
     ></p-inputNumber>
     } @case('multiselect') {
     <p-multiSelect
+      [formControlName]="field.name"
       [options]="field.options"
       optionLabel="value"
       placeholder="Select Cities"
@@ -55,10 +56,6 @@
   }
 
   <div class="flex justify-content-end">
-    <p-button
-      type="submit"
-      [label]="config().buttonName"
-      [disabled]="!isValid()"
-    ></p-button>
+    <p-button type="submit" [label]="config().buttonName"></p-button>
   </div>
 </form>

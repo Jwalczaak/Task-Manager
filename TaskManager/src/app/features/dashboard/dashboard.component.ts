@@ -4,7 +4,9 @@ import {
   inject,
   signal,
   Signal,
+  effect,
   WritableSignal,
+  EffectRef,
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -21,6 +23,7 @@ import { Task } from '../../shared/models/task';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import { FormSetup, TASK_ADD_OR_UPDATE_CONFIG } from '../../shared/models/form';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
+import { FormStoreService } from '../../shared/services/stores/form-store.service';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -42,7 +45,7 @@ import { GenericModalComponent } from '../../shared/components/generic-modal/gen
 })
 export class DashboardComponent {
   private taskStore = inject(TaskStoreService);
-
+  private formStore = inject(FormStoreService);
   TASK_ADD_OR_UPDATE_CONFIG: FormSetup = TASK_ADD_OR_UPDATE_CONFIG;
   loading: Signal<boolean> = computed(() =>
     this.taskStore.tasksResource.isLoading()
@@ -54,6 +57,13 @@ export class DashboardComponent {
   showModal: WritableSignal<boolean> = signal(false);
 
   GenericFormComponent = GenericFormComponent;
+
+  formEffect: EffectRef = effect(() => {
+    const submitted = this.formStore.state();
+    console.log('dsadsd');
+    console.log(submitted);
+  });
+
   openModal(): void {
     this.showModal.set(true);
   }
