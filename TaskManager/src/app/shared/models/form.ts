@@ -1,8 +1,9 @@
 export type FormFieldConfig = {
   name: string;
+  label: string;
   type: FieldType;
   required?: boolean;
-  placeholder?: string;
+  placeholder: string;
   min?: number;
   max?: number;
   options?: DropdownOption[];
@@ -18,7 +19,7 @@ export type DropdownOption = {
   value: string;
 };
 
-export type FieldType = 'number' | 'text' | 'date' | 'multiselect';
+export type FieldType = 'number' | 'text' | 'date' | 'multiselect' | 'dropdown';
 
 export type FormMode = 'create' | 'update';
 
@@ -33,13 +34,15 @@ export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
   fieldsConfig: [
     {
       name: 'title',
+      label: 'Title',
       type: 'text',
       required: true,
       placeholder: 'Provide name',
     },
     {
       name: 'status',
-      type: 'multiselect',
+      label: 'Status',
+      type: 'dropdown',
       required: true,
       placeholder: 'Select status',
       options: [
@@ -51,13 +54,15 @@ export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
       ],
     },
     {
-      name: 'Due date',
+      name: 'dueDate',
+      label: 'Due Date',
       type: 'date',
       required: true,
       placeholder: 'Select a date',
     },
     {
       name: 'assigned',
+      label: 'Assigned',
       type: 'multiselect',
       required: false,
       placeholder: 'Select assigned',
@@ -72,6 +77,7 @@ export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
 
     {
       name: 'progressPercentage',
+      label: 'Progress',
       type: 'number',
       required: false,
       placeholder: 'Mark progress',

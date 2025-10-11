@@ -3,9 +3,9 @@
   (ngSubmit)="onSubmit()"
   class="p-4 flex flex-column gap-4"
 >
-  @for (field of config().fieldsConfig; track field.name) {
+  @for (field of config().fieldsConfig; track field.label) {
   <div class="flex flex-column gap-2 w-full">
-    <label>{{ field.name }}</label>
+    <label>{{ field.label }}</label>
 
     @switch(field.type) { @case('text') {
     <input
@@ -19,24 +19,35 @@
       [formControlName]="field.name"
       [min]="field.min"
       [max]="field.max"
+      [placeholder]="field.placeholder"
       inputStyleClass="w-full"
     ></p-inputNumber>
+    } @case('dropdown') {
+    <p-select
+      [formControlName]="field.name"
+      [options]="field.options"
+      optionLabel="value"
+      optionValue="value"
+      [placeholder]="field.placeholder"
+      styleClass="w-full"
+    ></p-select>
     } @case('multiselect') {
     <p-multiSelect
       [formControlName]="field.name"
       [options]="field.options"
       optionLabel="value"
       optionValue="value"
-      placeholder="Select Cities"
+      [placeholder]="field.placeholder"
       [maxSelectedLabels]="3"
       styleClass="w-full"
     ></p-multiSelect>
     } @case('date') {
-    <p-calendar
+    <p-datepicker
       [formControlName]="field.name"
+      [placeholder]="field.placeholder"
       dateFormat="yy-mm-dd"
       styleClass="w-full"
-    ></p-calendar>
+    ></p-datepicker>
     } }
 
     <div

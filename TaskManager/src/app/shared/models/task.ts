@@ -4,7 +4,7 @@ export type Task = {
   status: statuses;
   dueDate: Date;
   CreationDate: Date;
-  assigned: string;
+  assigned: string[];
   progressPercentage: number;
 };
 
@@ -12,7 +12,7 @@ export interface TaskRequest {
   title: string;
   status: statuses;
   dueDate: Date;
-  assigned: string;
+  assigned: string[];
   progressPercentage: number;
 }
 

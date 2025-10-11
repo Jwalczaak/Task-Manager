@@ -18,11 +18,12 @@ import {
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from 'primeng/inputnumber';
-import { Calendar } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { Button } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CommonModule } from '@angular/common';
 import { FormStoreService } from '../../services/stores/form-store.service';
+import { SelectModule } from 'primeng/select';
 @Component({
   selector: 'app-generic-form',
   imports: [
@@ -30,10 +31,11 @@ import { FormStoreService } from '../../services/stores/form-store.service';
     InputNumber,
     InputTextModule,
     MultiSelectModule,
-    Calendar,
+    DatePickerModule,
     Button,
     CommonModule,
     FormsModule,
+    SelectModule,
   ],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.scss',

@@ -48,7 +48,7 @@ export class TaskStoreService {
     status: this.randomItem(this.statuses),
     dueDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
     CreationDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
-    assigned: this.randomItem(this.assignees),
+    assigned: [this.randomItem(this.assignees)],
     progressPercentage: Math.floor(Math.random() * 101),
   }));
 
