@@ -7,6 +7,7 @@ import { FormMode, FormState } from '../../models/form';
 export class FormStoreService<T = any> {
   private _state = signal<FormState<T>>({
     mode: 'create',
+    isSubmited: false,
     data: null,
     loading: false,
     error: null,
@@ -16,12 +17,14 @@ export class FormStoreService<T = any> {
   mode = computed(() => this._state().mode);
   data = computed(() => this._state().data);
   loading = computed(() => this._state().loading);
+  isSubmited = computed(() => this._state().isSubmited);
 
   setMode(mode: FormMode): void {
     this._state.update((s) => ({ ...s, mode }));
   }
 
   setData(data: T | null): void {
+    console.log(data);
     this._state.update((s) => ({ ...s, data }));
   }
 
@@ -33,10 +36,16 @@ export class FormStoreService<T = any> {
     this._state.update((s) => ({ ...s, error }));
   }
 
+  setSubmit(isSubmited: boolean): void {
+    this._state.update((s) => ({ ...s, isSubmited }));
+    console.log(this._state());
+  }
+
   reset(): void {
     const currentMode = this._state().mode;
     this._state.set({
       mode: currentMode,
+      isSubmited: false,
       data: null,
       loading: false,
       error: null,

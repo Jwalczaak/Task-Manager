@@ -1,10 +1,12 @@
+import { Item } from './item';
+
 export type Task = {
   id: number;
   title: string;
   status: statuses;
   dueDate: Date;
   CreationDate: Date;
-  assigned: string[];
+  assigned: Item[];
   progressPercentage: number;
 };
 
@@ -12,7 +14,7 @@ export interface TaskRequest {
   title: string;
   status: statuses;
   dueDate: Date;
-  assigned: string[];
+  assigned: Item[];
   progressPercentage: number;
 }
 

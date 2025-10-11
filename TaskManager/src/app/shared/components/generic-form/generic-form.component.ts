@@ -57,7 +57,8 @@ export class GenericFormComponent implements OnInit {
         if (field.min !== undefined) validators.push(Validators.min(field.min));
         if (field.max !== undefined) validators.push(Validators.max(field.max));
       }
-      group[field.name] = new FormControl('', validators);
+      const initialValue = this.formStore.data()?.[field.name] ?? '';
+      group[field.name] = new FormControl(initialValue, validators);
     });
 
     this.form.set(new FormGroup(group));
@@ -67,6 +68,7 @@ export class GenericFormComponent implements OnInit {
     const formValues = this.form().value;
     this.formStore.setLoading(false);
     this.formStore.setData(formValues);
+    this.formStore.setSubmit(true);
   }
 
   getControl(name: string) {

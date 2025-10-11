@@ -25,7 +25,7 @@
               placeholder="Search keyword"
             />
 
-            <p-button label="Create" (click)="openModal()" />
+            <p-button label="Create" (click)="openModal('create', null)" />
           </div>
         </p-iconfield>
       </div>
@@ -38,13 +38,19 @@
         <th>Status</th>
         <th>Progress</th>
         <th>Verified</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
 
     <ng-template #body let-task>
       <tr>
         <td>{{ task.title }}</td>
-        <td>{{ task.assigned }}</td>
+        <td>
+          @for(assigned of task.assigned; track assigned.value) {<span>{{
+            assigned.value
+          }}</span
+          >}
+        </td>
         <td>
           <p-tag
             [value]="task.status"
@@ -60,6 +66,13 @@
               'text-red-500 pi-times-circle': !task.verified
             }"
           ></i>
+        </td>
+        <td>
+          <p-button
+            icon="pi pi-pencil"
+            aria-label="Save"
+            (click)="openModal('update', task)"
+          />
         </td>
       </tr>
     </ng-template>
@@ -77,7 +90,7 @@
       [width]="'900px'"
       [height]="'600px'"
       [contentComponent]="GenericFormComponent"
-      [contentInputs]="{ config: TASK_ADD_OR_UPDATE_CONFIG }"
+      [contentInputs]="{ config: currentFormConfig() }"
       (closeModal)="onHandleCloseModal()"
     ></app-generic-modal>
   </div>

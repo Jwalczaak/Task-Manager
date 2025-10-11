@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Task, TaskRequest } from '../models/task';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { of, delay, firstValueFrom, map } from 'rxjs';
+import { of, delay, firstValueFrom, map, Observable } from 'rxjs';
+
+import { Item } from '../models/item';
 @Injectable({
   providedIn: 'root',
 })
@@ -22,7 +24,13 @@ export class TaskStoreService {
     'Code review',
   ];
 
-  assignees = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace'];
+  assignees: Item[] = [
+    { key: '1', value: 'Jan Nowak' },
+    { key: '2', value: 'Wojtek Kowal' },
+    { key: '3', value: 'Anna Kozak' },
+    { key: '4', value: 'Joanna Stryczniewicz' },
+    { key: '5', value: 'Artur Kurowski' },
+  ];
 
   statuses: Task['status'][] = [
     'to do',
@@ -62,7 +70,7 @@ export class TaskStoreService {
   readonly tasks = this.taskResource.value.asReadonly();
   readonly loading = this.taskResource.isLoading;
 
-  async createTask(payload: TaskRequest) {
+  async createTask(payload: TaskRequest): Promise<void> {
     const newTask = await firstValueFrom(this.postTask$(payload));
     console.log(newTask);
     this.tasksSource.update((tasks) => [...tasks, newTask]);
@@ -70,7 +78,27 @@ export class TaskStoreService {
     this.taskResource.reload();
   }
 
-  private postTask$(payload: TaskRequest) {
+  async updateTask(payload: TaskRequest, taskId: number): Promise<void> {
+    const updateTask = await firstValueFrom(this.putTask$(payload, taskId));
+    this.taskResource.update((tasks) => [...tasks, updateTask]);
+    this.taskResource.reload();
+  }
+
+  private putTask$(payload: TaskRequest, taskId: number): Observable<Task> {
+    const tasks = this.tasksSource();
+
+    const index = tasks.findIndex((t) => t.id.toString() === taskId.toString());
+
+    const updateTask: Task = { ...tasks[index], ...payload };
+
+    const updatedTasks = [...tasks];
+    updatedTasks[index] = updateTask;
+
+    return of(updateTask).pipe(delay(1000));
+  }
+
+  private postTask$(payload: TaskRequest): Observable<Task> {
+    console.log(payload);
     const newCat: Task = {
       id: this.tasks.length + 1,
       CreationDate: new Date(),

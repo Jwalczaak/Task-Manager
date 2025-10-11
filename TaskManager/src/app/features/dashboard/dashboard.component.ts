@@ -21,7 +21,12 @@ import { FormsModule } from '@angular/forms';
 import { TaskStoreService } from '../../shared/services/task-store.service';
 import { Task, TaskRequest } from '../../shared/models/task';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
-import { FormSetup, TASK_ADD_OR_UPDATE_CONFIG } from '../../shared/models/form';
+import {
+  FormMode,
+  FormSetup,
+  TASK_CREATE_CONFIG,
+  TASK_UPDATE_CONFIG,
+} from '../../shared/models/form';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 import { FormStoreService } from '../../shared/services/stores/form-store.service';
 @Component({
@@ -46,27 +51,43 @@ import { FormStoreService } from '../../shared/services/stores/form-store.servic
 export class DashboardComponent {
   private taskStore = inject(TaskStoreService);
   private formStore = inject(FormStoreService);
-  TASK_ADD_OR_UPDATE_CONFIG: FormSetup = TASK_ADD_OR_UPDATE_CONFIG;
+  currentFormConfig: Signal<FormSetup> = computed(() => {
+    const mode = this.formStore.mode();
+    return mode === 'create' ? TASK_CREATE_CONFIG : TASK_UPDATE_CONFIG;
+  });
   loading: Signal<boolean> = computed(() => this.taskStore.loading());
   tasks: Signal<Task[] | undefined> = computed(() => this.taskStore.tasks());
   showForm: WritableSignal<boolean> = signal(false);
   showModal: WritableSignal<boolean> = signal(false);
-
+  taskId: WritableSignal<number> = signal(0);
   GenericFormComponent = GenericFormComponent;
 
   formEffect: EffectRef = effect(() => {
+    const isSubmited = this.formStore.isSubmited();
     const formState = this.formStore.state();
-    const submittedData: TaskRequest = formState.data;
-    if (submittedData) {
-      this.createTask(submittedData);
+    const formMode = this.formStore.mode();
+    const payload: TaskRequest = formState.data;
+
+    if (isSubmited && payload && formMode === 'create') {
+      this.createTask(payload);
+    } else if (isSubmited && payload && formMode === 'update') {
+      // this.updateTask(payload, this.taskId());
     }
+    console.log('dsadsd');
   });
 
   createTask(payload: TaskRequest): void {
     this.taskStore.createTask(payload);
   }
 
-  openModal(): void {
+  updateTask(payload: TaskRequest, taskId: string): void {}
+
+  openModal(mode: FormMode, data: Task | null): void {
+    this.formStore.setMode(mode);
+    this.formStore.setData(data);
+    if (mode === 'update' && !!data) {
+      this.taskId.set(data.id);
+    }
     this.showModal.set(true);
   }
 

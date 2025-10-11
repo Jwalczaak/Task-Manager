@@ -1,3 +1,5 @@
+import { Item } from './item';
+
 export type FormFieldConfig = {
   name: string;
   label: string;
@@ -6,17 +8,12 @@ export type FormFieldConfig = {
   placeholder: string;
   min?: number;
   max?: number;
-  options?: DropdownOption[];
+  options?: Item[];
 };
 
 export type FormSetup = {
   fieldsConfig: FormFieldConfig[];
   buttonName: string;
-};
-
-export type DropdownOption = {
-  key: string;
-  value: string;
 };
 
 export type FieldType = 'number' | 'text' | 'date' | 'multiselect' | 'dropdown';
@@ -25,12 +22,13 @@ export type FormMode = 'create' | 'update';
 
 export type FormState<T> = {
   mode: 'create' | 'update';
+  isSubmited: boolean;
   data: T | null;
   loading: boolean;
   error: string | null;
 };
 
-export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
+const BASE_TASK_CONFIG: Omit<FormSetup, 'buttonName'> = {
   fieldsConfig: [
     {
       name: 'title',
@@ -85,5 +83,14 @@ export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
       max: 100,
     },
   ],
+};
+
+export const TASK_CREATE_CONFIG: FormSetup = {
+  ...BASE_TASK_CONFIG,
   buttonName: 'Create',
+};
+
+export const TASK_UPDATE_CONFIG: FormSetup = {
+  ...BASE_TASK_CONFIG,
+  buttonName: 'Update',
 };
