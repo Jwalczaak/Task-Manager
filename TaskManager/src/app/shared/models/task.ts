@@ -8,4 +8,12 @@ export type Task = {
   progressPercentage: number;
 };
 
+export interface TaskRequest {
+  title: string;
+  status: statuses;
+  dueDate: Date;
+  assigned: string;
+  progressPercentage: number;
+}
+
 export type statuses = 'to do' | 'in progress' | 'waiting' | 'blocked' | 'done';

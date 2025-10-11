@@ -31,7 +31,12 @@ export type FormState<T> = {
 
 export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
   fieldsConfig: [
-    { name: 'name', type: 'text', required: true, placeholder: 'Provide name' },
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+      placeholder: 'Provide name',
+    },
     {
       name: 'status',
       type: 'multiselect',
@@ -66,7 +71,7 @@ export const TASK_ADD_OR_UPDATE_CONFIG: FormSetup = {
     },
 
     {
-      name: 'progress',
+      name: 'progressPercentage',
       type: 'number',
       required: false,
       placeholder: 'Mark progress',

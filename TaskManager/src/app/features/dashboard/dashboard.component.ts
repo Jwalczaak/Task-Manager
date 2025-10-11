@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { TaskStoreService } from '../../shared/services/task-store.service';
-import { Task } from '../../shared/models/task';
+import { Task, TaskRequest } from '../../shared/models/task';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import { FormSetup, TASK_ADD_OR_UPDATE_CONFIG } from '../../shared/models/form';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
@@ -47,29 +47,30 @@ export class DashboardComponent {
   private taskStore = inject(TaskStoreService);
   private formStore = inject(FormStoreService);
   TASK_ADD_OR_UPDATE_CONFIG: FormSetup = TASK_ADD_OR_UPDATE_CONFIG;
-  loading: Signal<boolean> = computed(() =>
-    this.taskStore.tasksResource.isLoading()
-  );
-  tasks: Signal<Task[] | undefined> = computed(() =>
-    this.taskStore.tasksResource.value()
-  );
+  loading: Signal<boolean> = computed(() => this.taskStore.loading());
+  tasks: Signal<Task[] | undefined> = computed(() => this.taskStore.tasks());
   showForm: WritableSignal<boolean> = signal(false);
   showModal: WritableSignal<boolean> = signal(false);
 
   GenericFormComponent = GenericFormComponent;
 
   formEffect: EffectRef = effect(() => {
-    const submitted = this.formStore.state();
-    console.log('dsadsd');
-    console.log(submitted);
+    const formState = this.formStore.state();
+    const submittedData: TaskRequest = formState.data;
+    if (submittedData) {
+      this.createTask(submittedData);
+    }
   });
+
+  createTask(payload: TaskRequest): void {
+    this.taskStore.createTask(payload);
+  }
 
   openModal(): void {
     this.showModal.set(true);
   }
 
   onHandleCloseModal(): void {
-    console.log('is closing');
     this.showModal.set(false);
   }
 

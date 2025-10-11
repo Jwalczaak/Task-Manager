@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Task } from '../models/task';
+import { Injectable, signal } from '@angular/core';
+import { Task, TaskRequest } from '../models/task';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { of, delay } from 'rxjs';
+import { of, delay, firstValueFrom, map } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -42,7 +42,7 @@ export class TaskStoreService {
     );
   }
 
-  tasks: Task[] = Array.from({ length: 200 }, (_, i) => ({
+  generatedTasks: Task[] = Array.from({ length: 3 }, (_, i) => ({
     id: i + 1,
     title: this.randomItem(this.titles),
     status: this.randomItem(this.statuses),
@@ -52,7 +52,37 @@ export class TaskStoreService {
     progressPercentage: Math.floor(Math.random() * 101),
   }));
 
-  tasksResource = rxResource({
-    loader: () => of(this.tasks).pipe(delay(1000)),
+  private tasksSource = signal<Task[]>(this.generatedTasks);
+
+  private readonly taskResource = rxResource({
+    defaultValue: [],
+    loader: () => of(this.tasksSource()).pipe(delay(1000)),
   });
+
+  readonly tasks = this.taskResource.value.asReadonly();
+  readonly loading = this.taskResource.isLoading;
+
+  async createTask(payload: TaskRequest) {
+    const newTask = await firstValueFrom(this.postTask$(payload));
+    console.log(newTask);
+    this.tasksSource.update((tasks) => [...tasks, newTask]);
+    console.log(this.tasksSource());
+    this.taskResource.reload();
+  }
+
+  private postTask$(payload: TaskRequest) {
+    const newCat: Task = {
+      id: this.tasks.length + 1,
+      CreationDate: new Date(),
+      ...payload,
+    };
+    return of(newCat).pipe(
+      delay(1000),
+      map((task) => this.transformTask(task))
+    );
+  }
+
+  private transformTask(task: Task) {
+    return { ...task };
+  }
 }
