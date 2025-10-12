@@ -1,13 +1,4 @@
-import {
-  Component,
-  inject,
-  input,
-  Input,
-  OnInit,
-  output,
-  OutputEmitterRef,
-  signal,
-} from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormFieldConfig, FormSetup } from '../../models/form';
 import {
   FormControl,

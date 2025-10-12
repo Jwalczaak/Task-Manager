@@ -18,10 +18,10 @@ export type FormSetup = {
 
 export type FieldType = 'number' | 'text' | 'date' | 'multiselect' | 'dropdown';
 
-export type FormMode = 'create' | 'update';
+export type FormMode = 'create' | 'update' | 'delete';
 
 export type FormState<T> = {
-  mode: 'create' | 'update';
+  mode: FormMode;
   isSubmited: boolean;
   data: T | null;
   loading: boolean;

@@ -7,6 +7,7 @@ import {
   effect,
   WritableSignal,
   EffectRef,
+  Type,
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -23,12 +24,12 @@ import { Task, TaskRequest } from '../../shared/models/task';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import {
   FormMode,
-  FormSetup,
   TASK_CREATE_CONFIG,
   TASK_UPDATE_CONFIG,
 } from '../../shared/models/form';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 import { FormStoreService } from '../../shared/services/stores/form-store.service';
+import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -43,6 +44,7 @@ import { FormStoreService } from '../../shared/services/stores/form-store.servic
     CommonModule,
     FormsModule,
     GenericFormComponent,
+    DialogComponent,
     GenericModalComponent,
   ],
   templateUrl: './dashboard.component.html',
@@ -51,10 +53,38 @@ import { FormStoreService } from '../../shared/services/stores/form-store.servic
 export class DashboardComponent {
   private taskStore = inject(TaskStoreService);
   private formStore = inject(FormStoreService);
-  currentFormConfig: Signal<FormSetup> = computed(() => {
-    const mode = this.formStore.mode();
-    return mode === 'create' ? TASK_CREATE_CONFIG : TASK_UPDATE_CONFIG;
+  private mode = computed(() => this.formStore.mode());
+
+  modalConfig = computed(() => {
+    const mode = this.mode();
+
+    const configMap = {
+      create: {
+        header: 'Create new task',
+        component: GenericFormComponent,
+        width: '900px',
+        height: '600px',
+        formConfig: TASK_CREATE_CONFIG,
+      },
+      update: {
+        header: 'Update task',
+        component: GenericFormComponent,
+        width: '900px',
+        height: '600px',
+        formConfig: TASK_UPDATE_CONFIG,
+      },
+      delete: {
+        header: 'Delete task',
+        component: DialogComponent,
+        width: '600px',
+        height: '200px',
+        formConfig: null,
+      },
+    } as const;
+
+    return configMap[mode] ?? configMap.create;
   });
+
   loading: Signal<boolean> = computed(() => this.taskStore.loading());
   tasks: Signal<Task[] | undefined> = computed(() => this.taskStore.tasks());
   showForm: WritableSignal<boolean> = signal(false);
@@ -98,6 +128,7 @@ export class DashboardComponent {
     if (mode === 'update' && !!data) {
       this.taskId.set(data.id);
     }
+
     this.showModal.set(true);
   }
 

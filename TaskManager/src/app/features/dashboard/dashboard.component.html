@@ -60,11 +60,18 @@
         <td>{{ task.progressPercentage }}%</td>
 
         <td>
-          <p-button
-            icon="pi pi-pencil"
-            aria-label="Save"
-            (click)="openModal('update', task)"
-          />
+          <div class="action-buttons flex gap-2">
+            <p-button
+              icon="pi pi-pencil"
+              aria-label="Save"
+              (click)="openModal('update', task)"
+            />
+            <p-button
+              icon="pi pi-trash"
+              aria-label="Save"
+              (click)="openModal('delete', task)"
+            />
+          </div>
         </td>
       </tr>
     </ng-template>
@@ -78,11 +85,11 @@
   @if(showModal()){
   <div class="form-container mt-4">
     <app-generic-modal
-      [headerText]="'Create new task'"
-      [width]="'900px'"
-      [height]="'600px'"
-      [contentComponent]="GenericFormComponent"
-      [contentInputs]="{ config: currentFormConfig() }"
+      [headerText]="modalConfig().header"
+      [width]="modalConfig().width"
+      [height]="modalConfig().height"
+      [contentComponent]="modalConfig().component"
+      [contentInputs]="{ config: modalConfig().formConfig }"
       (closeModal)="onHandleCloseModal()"
     ></app-generic-modal>
   </div>
