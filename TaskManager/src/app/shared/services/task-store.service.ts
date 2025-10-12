@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Task, TaskRequest } from '../models/task';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of, delay, firstValueFrom, map, Observable } from 'rxjs';
 
 import { Item } from '../models/item';
+
 @Injectable({
   providedIn: 'root',
 })
 export class TaskStoreService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   titles = [
     'Design homepage',
@@ -79,8 +80,13 @@ export class TaskStoreService {
   }
 
   async updateTask(payload: TaskRequest, taskId: number): Promise<void> {
-    const updateTask = await firstValueFrom(this.putTask$(payload, taskId));
-    this.taskResource.update((tasks) => [...tasks, updateTask]);
+    const updatedTask = await firstValueFrom(this.putTask$(payload, taskId));
+    this.tasksSource.update((tasks) =>
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, ...updatedTask } : task
+      )
+    );
+
     this.taskResource.reload();
   }
 
@@ -91,10 +97,10 @@ export class TaskStoreService {
 
     const updateTask: Task = { ...tasks[index], ...payload };
 
-    const updatedTasks = [...tasks];
-    updatedTasks[index] = updateTask;
-
-    return of(updateTask).pipe(delay(1000));
+    return of(updateTask).pipe(
+      delay(1000),
+      map((task) => this.transformTask(task))
+    );
   }
 
   private postTask$(payload: TaskRequest): Observable<Task> {

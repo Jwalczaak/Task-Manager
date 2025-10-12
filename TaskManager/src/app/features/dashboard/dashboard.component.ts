@@ -71,16 +71,18 @@ export class DashboardComponent {
     if (isSubmited && payload && formMode === 'create') {
       this.createTask(payload);
     } else if (isSubmited && payload && formMode === 'update') {
-      // this.updateTask(payload, this.taskId());
+      this.updateTask(payload, this.taskId());
+      this.formStore.reset();
     }
-    console.log('dsadsd');
   });
 
   createTask(payload: TaskRequest): void {
     this.taskStore.createTask(payload);
   }
 
-  updateTask(payload: TaskRequest, taskId: string): void {}
+  updateTask(payload: TaskRequest, taskId: number): void {
+    this.taskStore.updateTask(payload, taskId);
+  }
 
   openModal(mode: FormMode, data: Task | null): void {
     this.formStore.setMode(mode);
