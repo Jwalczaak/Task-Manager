@@ -71,12 +71,13 @@ export class TaskStoreService {
   readonly tasks = this.taskResource.value.asReadonly();
   readonly loading = this.taskResource.isLoading;
 
+  actionSuccess = signal<boolean>(false);
+
   async createTask(payload: TaskRequest): Promise<void> {
     const newTask = await firstValueFrom(this.postTask$(payload));
-    console.log(newTask);
     this.tasksSource.update((tasks) => [...tasks, newTask]);
-    console.log(this.tasksSource());
     this.taskResource.reload();
+    this.actionSuccess.set(true);
   }
 
   async updateTask(payload: TaskRequest, taskId: number): Promise<void> {
@@ -86,8 +87,8 @@ export class TaskStoreService {
         task.id === taskId ? { ...task, ...updatedTask } : task
       )
     );
-
     this.taskResource.reload();
+    this.actionSuccess.set(true);
   }
 
   private putTask$(payload: TaskRequest, taskId: number): Observable<Task> {

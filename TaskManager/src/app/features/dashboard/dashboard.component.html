@@ -13,10 +13,10 @@
     <ng-template #caption>
       <div class="flex">
         <p-iconfield iconPosition="left" class="ml-auto">
-          <p-inputicon>
-            <i class="pi pi-search"></i>
-          </p-inputicon>
           <div class="actions flex flex-row justify-content-between">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
             <input
               #globalFilter
               pInputText
@@ -37,7 +37,7 @@
         <th>Assigned</th>
         <th>Status</th>
         <th>Progress</th>
-        <th>Verified</th>
+
         <th>Actions</th>
       </tr>
     </ng-template>
@@ -58,15 +58,7 @@
           ></p-tag>
         </td>
         <td>{{ task.progressPercentage }}%</td>
-        <td>
-          <i
-            class="pi"
-            [ngClass]="{
-              'text-green-500 pi-check-circle': task.verified,
-              'text-red-500 pi-times-circle': !task.verified
-            }"
-          ></i>
-        </td>
+
         <td>
           <p-button
             icon="pi pi-pencil"

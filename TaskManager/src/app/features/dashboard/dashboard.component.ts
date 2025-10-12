@@ -76,6 +76,14 @@ export class DashboardComponent {
     }
   });
 
+  actionSuccessEffect: EffectRef = effect(() => {
+    if (this.taskStore.actionSuccess()) {
+      this.showModal.set(false);
+      this.formStore.reset();
+      this.taskStore.actionSuccess.set(false);
+    }
+  });
+
   createTask(payload: TaskRequest): void {
     this.taskStore.createTask(payload);
   }
