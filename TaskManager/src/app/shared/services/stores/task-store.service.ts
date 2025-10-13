@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Task, TaskRequest } from '../models/task';
+import { Task, TaskRequest } from '../../models/task';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of, delay, firstValueFrom, map, Observable } from 'rxjs';
 
-import { Item } from '../models/item';
+import { Item } from '../../models/item';
 
 @Injectable({
   providedIn: 'root',
@@ -91,6 +91,29 @@ export class TaskStoreService {
     this.actionSuccess.set(true);
   }
 
+  async deleteTask(taskId: number): Promise<void> {
+    const deleteTask = await firstValueFrom(this.deleteTask$(taskId));
+    console.log('hej');
+    this.tasksSource.update((tasks) =>
+      tasks.filter((task) => task.id !== taskId)
+    );
+
+    this.taskResource.reload();
+    this.actionSuccess.set(true);
+  }
+
+  private postTask$(payload: TaskRequest): Observable<Task> {
+    const newCat: Task = {
+      id: this.tasks.length + 1,
+      CreationDate: new Date(),
+      ...payload,
+    };
+    return of(newCat).pipe(
+      delay(1000),
+      map((task) => this.transformTask(task))
+    );
+  }
+
   private putTask$(payload: TaskRequest, taskId: number): Observable<Task> {
     const tasks = this.tasksSource();
 
@@ -104,17 +127,8 @@ export class TaskStoreService {
     );
   }
 
-  private postTask$(payload: TaskRequest): Observable<Task> {
-    console.log(payload);
-    const newCat: Task = {
-      id: this.tasks.length + 1,
-      CreationDate: new Date(),
-      ...payload,
-    };
-    return of(newCat).pipe(
-      delay(1000),
-      map((task) => this.transformTask(task))
-    );
+  private deleteTask$(taskId: number): Observable<void> {
+    return of(void 0).pipe(delay(1000));
   }
 
   private transformTask(task: Task) {

@@ -19,7 +19,7 @@ import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
-import { TaskStoreService } from '../../shared/services/task-store.service';
+import { TaskStoreService } from '../../shared/services/stores/task-store.service';
 import { Task, TaskRequest } from '../../shared/models/task';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import {
@@ -30,6 +30,11 @@ import {
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 import { FormStoreService } from '../../shared/services/stores/form-store.service';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
+import {
+  ConfigMap,
+  DELETE_DIALOG_CONFIG,
+} from '../../shared/models/modal-config';
+import { DialogService } from '../../shared/services/dialog.service';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -53,32 +58,39 @@ import { DialogComponent } from '../../shared/components/dialog/dialog.component
 export class DashboardComponent {
   private taskStore = inject(TaskStoreService);
   private formStore = inject(FormStoreService);
+  private dialogService = inject(DialogService);
   private mode = computed(() => this.formStore.mode());
 
   modalConfig = computed(() => {
     const mode = this.mode();
-
-    const configMap = {
+    const selectedTask = this.selectedTask();
+    const configMap: ConfigMap = {
       create: {
         header: 'Create new task',
         component: GenericFormComponent,
         width: '900px',
         height: '600px',
-        formConfig: TASK_CREATE_CONFIG,
+        config: TASK_CREATE_CONFIG,
       },
       update: {
         header: 'Update task',
         component: GenericFormComponent,
         width: '900px',
         height: '600px',
-        formConfig: TASK_UPDATE_CONFIG,
+        config: TASK_UPDATE_CONFIG,
       },
       delete: {
         header: 'Delete task',
         component: DialogComponent,
         width: '600px',
         height: '200px',
-        formConfig: null,
+        config: {
+          ...DELETE_DIALOG_CONFIG,
+          messageContent: DELETE_DIALOG_CONFIG.messageContent.replace(
+            '{taskTitle}',
+            String(selectedTask?.title ?? '')
+          ),
+        },
       },
     } as const;
 
@@ -89,7 +101,7 @@ export class DashboardComponent {
   tasks: Signal<Task[] | undefined> = computed(() => this.taskStore.tasks());
   showForm: WritableSignal<boolean> = signal(false);
   showModal: WritableSignal<boolean> = signal(false);
-  taskId: WritableSignal<number> = signal(0);
+  selectedTask: WritableSignal<Task | null> = signal(null);
   GenericFormComponent = GenericFormComponent;
 
   formEffect: EffectRef = effect(() => {
@@ -101,8 +113,22 @@ export class DashboardComponent {
     if (isSubmited && payload && formMode === 'create') {
       this.createTask(payload);
     } else if (isSubmited && payload && formMode === 'update') {
-      this.updateTask(payload, this.taskId());
-      this.formStore.reset();
+      const taskId = this.selectedTask()?.id;
+      if (taskId) {
+        this.updateTask(payload, taskId);
+        this.formStore.reset();
+      }
+    }
+  });
+
+  dialogEffect: EffectRef = effect(() => {
+    if (this.dialogService.mode() === 'cancel') {
+      this.showModal.set(false);
+    } else if (this.dialogService.mode() === 'accept') {
+      const taskId = this.selectedTask()?.id;
+      if (taskId) {
+        this.deleteTask(taskId);
+      }
     }
   });
 
@@ -122,11 +148,15 @@ export class DashboardComponent {
     this.taskStore.updateTask(payload, taskId);
   }
 
+  deleteTask(taskId: number): void {
+    this.taskStore.deleteTask(taskId);
+  }
+
   openModal(mode: FormMode, data: Task | null): void {
     this.formStore.setMode(mode);
     this.formStore.setData(data);
-    if (mode === 'update' && !!data) {
-      this.taskId.set(data.id);
+    if ((mode === 'update' || mode === 'delete') && !!data) {
+      this.selectedTask.set(data);
     }
 
     this.showModal.set(true);

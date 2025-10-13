@@ -24,7 +24,6 @@ export class FormStoreService<T = any> {
   }
 
   setData(data: T | null): void {
-    console.log(data);
     this._state.update((s) => ({ ...s, data }));
   }
 
@@ -38,7 +37,6 @@ export class FormStoreService<T = any> {
 
   setSubmit(isSubmited: boolean): void {
     this._state.update((s) => ({ ...s, isSubmited }));
-    console.log(this._state());
   }
 
   reset(): void {
