@@ -56,7 +56,7 @@ export class TaskStoreService {
     title: this.randomItem(this.titles),
     status: this.randomItem(this.statuses),
     dueDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
-    CreationDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
+    creationDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
     assigned: [this.randomItem(this.assignees)],
     progressPercentage: Math.floor(Math.random() * 101),
   }));
@@ -105,7 +105,7 @@ export class TaskStoreService {
   private postTask$(payload: TaskRequest): Observable<Task> {
     const newCat: Task = {
       id: this.tasks.length + 1,
-      CreationDate: new Date(),
+      creationDate: new Date(),
       ...payload,
     };
     return of(newCat).pipe(

@@ -18,6 +18,7 @@ export class FormStoreService<T = any> {
   data = computed(() => this._state().data);
   loading = computed(() => this._state().loading);
   isSubmited = computed(() => this._state().isSubmited);
+  error = computed(() => this._state().error);
 
   setMode(mode: FormMode): void {
     this._state.update((s) => ({ ...s, mode }));
