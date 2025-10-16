@@ -5,7 +5,7 @@ export type Task = {
   title: string;
   status: statuses;
   dueDate: Date;
-  CreationDate: Date;
+  creationDate: Date;
   assigned: Item[];
   progressPercentage: number;
 };

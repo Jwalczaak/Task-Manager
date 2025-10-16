@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Task, TaskRequest } from '../../models/task';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of, delay, firstValueFrom, map, Observable } from 'rxjs';
@@ -10,8 +9,6 @@ import { Item } from '../../models/item';
   providedIn: 'root',
 })
 export class TaskStoreService {
-  private http = inject(HttpClient);
-
   titles = [
     'Design homepage',
     'Setup database',
@@ -56,7 +53,7 @@ export class TaskStoreService {
     title: this.randomItem(this.titles),
     status: this.randomItem(this.statuses),
     dueDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
-    CreationDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
+    creationDate: this.randomDate(new Date(2025, 0, 1), new Date(2025, 11, 31)),
     assigned: [this.randomItem(this.assignees)],
     progressPercentage: Math.floor(Math.random() * 101),
   }));
@@ -93,7 +90,6 @@ export class TaskStoreService {
 
   async deleteTask(taskId: number): Promise<void> {
     const deleteTask = await firstValueFrom(this.deleteTask$(taskId));
-    console.log('hej');
     this.tasksSource.update((tasks) =>
       tasks.filter((task) => task.id !== taskId)
     );
@@ -105,7 +101,7 @@ export class TaskStoreService {
   private postTask$(payload: TaskRequest): Observable<Task> {
     const newCat: Task = {
       id: this.tasks.length + 1,
-      CreationDate: new Date(),
+      creationDate: new Date(),
       ...payload,
     };
     return of(newCat).pipe(

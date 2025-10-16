@@ -1,9 +1,10 @@
 <div class="content p-4 flex flex-column gap-4">
-  <span>{{ config().messageContent }}</span>
+  <span class="content-message">{{ config().messageContent }}</span>
 
   <div class="buttons-container content justify-content-end p-4 flex gap-4">
     @if(config().cancelButtonName){
     <p-button
+      class="button-cancel"
       (click)="onCancel()"
       type="button"
       [label]="config().cancelButtonName"
@@ -12,6 +13,7 @@
     }
 
     <p-button
+      class="button-accept"
       (click)="onAccept()"
       type="button"
       [label]="config().acceptButtonName"
