@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Task, TaskRequest } from '../../models/task';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of, delay, firstValueFrom, map, Observable } from 'rxjs';
@@ -10,8 +9,6 @@ import { Item } from '../../models/item';
   providedIn: 'root',
 })
 export class TaskStoreService {
-  private http = inject(HttpClient);
-
   titles = [
     'Design homepage',
     'Setup database',
@@ -93,7 +90,6 @@ export class TaskStoreService {
 
   async deleteTask(taskId: number): Promise<void> {
     const deleteTask = await firstValueFrom(this.deleteTask$(taskId));
-    console.log('hej');
     this.tasksSource.update((tasks) =>
       tasks.filter((task) => task.id !== taskId)
     );
